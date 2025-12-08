@@ -1,0 +1,6 @@
+include pyserpy/*.so
+include pyserpy/*.pyd
+include pyserpy/*.dll
+include README.md
+include LICENSE
+
