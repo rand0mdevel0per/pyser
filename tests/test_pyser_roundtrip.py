@@ -78,7 +78,7 @@ def test_callable_inside_container_roundtrip_or_skip():
     lst = [make_closure(1), make_closure(2), 10]
     data = dumps(lst)
     out = loads(data)
-
+    print("deser finished")
     assert isinstance(out, list)
     assert out[-1] == 10
     if callable(out[0]):

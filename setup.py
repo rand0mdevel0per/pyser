@@ -59,10 +59,6 @@ class CMakeBuild(build_ext):
     def build_extension(self, ext):
         extdir = os.fspath(Path(self.get_ext_fullpath(ext.name)).parent.resolve())
 
-        # todo()!
-
-        self.debug = True
-
         cfg = "Debug" if self.debug else "Release"
 
         cmake_args = [
