@@ -7,9 +7,9 @@ obj = {"mv": memoryview(b), "ba": bytearray(b)}
 print('calling dumps')
 data = dumps(obj)
 print('dumps returned len', len(data))
+import traceback
 try:
     out = loads(data)
     print('loads returned, mv type:', type(out['mv']))
-except Exception as e:
-    print('caught exception:', type(e), repr(e))
-
+except Exception:
+    traceback.print_exc()
