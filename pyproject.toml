@@ -1,14 +1,14 @@
 [build-system]
-requires = ["scikit-build-core>=0.10.0", "wheel", "setuptools", "cmake", "ninja"]
+requires = ["scikit-build-core>=0.10.0", "wheel", "setuptools", "cmake", "ninja","marshall"]
 build-backend = "scikit_build_core"
 
 [project]
 name = "serpy"
-version = "0.0.1"
-description = "Python wrapper for the high-performance C++ pyser serialization library"
+version = "1.0.0"
+description = "A high-performance C++ pyser serialization library with python wrapping"
 readme = "README.md"
 license = {text = "MIT"}
-authors = [ {name = "(auto) pyser wrapper"} ]
+authors = [{ name = "rand0mdevel0per" } ]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -17,7 +17,7 @@ classifiers = [
 requires-python = ">=3.8"
 
 [project.urls]
-"Source" = "https://example.com/"
+"Source" = "https://github.com/rand0mdevel0per/pyser"
 
 [tool.setuptools.packages.find]
 where = ["."]
