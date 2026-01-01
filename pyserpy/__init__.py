@@ -19,6 +19,7 @@ import importlib.util
 import importlib.machinery
 import os
 import sys
+import contextlib
 
 __all__ = ["dumps", "loads", "dump", "load", "serialize", "deserialize"]
 
@@ -101,12 +102,81 @@ def _ensure_native():
     return _native
 
 
+# Optional sanitizer: clear __reduce__/__reduce_ex__ on callables temporarily
+# when serializing to avoid reliance on marshal-based reduce behavior. This is
+# an interim mitigation until the C++ side implements a full code-object
+# serializer (see cpp/MARSHAL_PORT_PLAN.md). The sanitizer is opt-in and can
+# be enabled by setting the environment variable PYSER_SANITIZE_REDUCE=1.
+
+def _iter_functions(obj, seen=None):
+    # Simple recursive walker that yields function objects nested in common
+    # container types. Not exhaustive; used only by the sanitizer.
+    if seen is None:
+        seen = set()
+    oid = id(obj)
+    if oid in seen:
+        return
+    seen.add(oid)
+    import types
+    if isinstance(obj, types.FunctionType):
+        yield obj
+        # inspect closure cells for nested functions
+        if obj.__closure__:
+            for cell in obj.__closure__:
+                try:
+                    for f in _iter_functions(cell.cell_contents, seen):
+                        yield f
+                except Exception:
+                    continue
+    elif isinstance(obj, (list, tuple, set, frozenset)):
+        for item in obj:
+            for f in _iter_functions(item, seen):
+                yield f
+    elif isinstance(obj, dict):
+        for k, v in obj.items():
+            for f in _iter_functions(k, seen):
+                yield f
+            for f in _iter_functions(v, seen):
+                yield f
+
+@contextlib.contextmanager
+def _temp_clear_reduce(obj):
+    enabled = os.environ.get("PYSER_SANITIZE_REDUCE") == "1"
+    if not enabled:
+        yield
+        return
+    backups = []
+    import types
+    for f in _iter_functions(obj):
+        # Only clear user-defined function attributes if present
+        for attr in ("__reduce__", "__reduce_ex__"):
+            if hasattr(f, attr):
+                backups.append((f, attr, getattr(f, attr)))
+                try:
+                    delattr(f, attr)
+                except Exception:
+                    try:
+                        setattr(f, attr, None)
+                    except Exception:
+                        # give up silently; sanitizer is best-effort
+                        pass
+    try:
+        yield
+    finally:
+        for f, attr, val in backups:
+            try:
+                setattr(f, attr, val)
+            except Exception:
+                pass
+
+
 # Exposed API (thin wrappers)
 
 def serialize(obj: Any) -> bytes:
     """Serialize a Python object to bytes using the native pyser extension."""
     mod = _ensure_native()
-    return mod.serialize(obj)
+    with _temp_clear_reduce(obj):
+        return mod.serialize(obj)
 
 
 def deserialize(data: bytes) -> Any:
@@ -130,7 +200,8 @@ def dump(obj: Any, filename: str) -> None:
     mod = _ensure_native()
     # Some compiled modules provide serialize_to_file
     if hasattr(mod, "serialize_to_file"):
-        return mod.serialize_to_file(obj, filename)
+        with _temp_clear_reduce(obj):
+            return mod.serialize_to_file(obj, filename)
     # Fallback: write bytes
     data = serialize(obj)
     with open(filename, "wb") as f:
@@ -157,7 +228,7 @@ from ._version import __version__
 
 # Clean up namespace
 # Only delete names that are actually defined to avoid NameError during import-time failures
-for _name in ("importlib", "importlib.util", "importlib.machinery", "os", "sys"):
+for _name in ("importlib", "importlib.util", "importlib.machinery"):
     if _name in globals():
         try:
             del globals()[_name]
