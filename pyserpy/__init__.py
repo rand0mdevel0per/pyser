@@ -55,9 +55,7 @@ def _load_native():
     if not candidates:
         for fname in os.listdir(pkg_dir):
             lf = fname.lower()
-            if "pyser" in lf and (
-                lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")
-            ):
+            if "pyser" in lf and (lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")):
                 candidates.append(os.path.join(pkg_dir, fname))
 
     for path in candidates:
@@ -81,9 +79,7 @@ def _load_native():
 
     # Build a helpful error message containing diagnostics
     msg_lines = ["Could not find or import the compiled 'pyser' extension."]
-    msg_lines.append(
-        "Looked for module name 'pyser' and shared libraries in package directory."
-    )
+    msg_lines.append("Looked for module name 'pyser' and shared libraries in package directory.")
     msg_lines.append("Errors:")
     for what, err in errors:
         msg_lines.append(f" - {what}: {err}")

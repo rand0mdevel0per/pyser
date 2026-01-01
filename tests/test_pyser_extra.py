@@ -52,9 +52,7 @@ def test_closure_cell_contents_roundtrip():
             assert len(orig_cells) == len(deser_cells)
             # Compare contents as much as possible
             for o_c, d_c in zip(orig_cells, deser_cells):
-                assert getattr(o_c, "cell_contents", None) == getattr(
-                    d_c, "cell_contents", None
-                )
+                assert getattr(o_c, "cell_contents", None) == getattr(d_c, "cell_contents", None)
     except Exception:
         # Don't fail the test if introspection isn't supported in this build
         pass
