@@ -19,8 +19,10 @@ except Exception:  # pragma: no cover - skip when extension not built
 
 def make_closure(a):
     """Create a simple closure used to obtain a code object for testing."""
+
     def closure(b):
         return a + b
+
     return closure
 
 

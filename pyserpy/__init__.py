@@ -45,7 +45,9 @@ def _load_native():
     candidates = []
     for fname in os.listdir(pkg_dir):
         lf = fname.lower()
-        if lf.startswith("pyser") and (lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")):
+        if lf.startswith("pyser") and (
+            lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")
+        ):
             candidates.append(os.path.join(pkg_dir, fname))
 
     # Also allow the common name produced by CMake in this repo
@@ -53,7 +55,9 @@ def _load_native():
     if not candidates:
         for fname in os.listdir(pkg_dir):
             lf = fname.lower()
-            if "pyser" in lf and (lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")):
+            if "pyser" in lf and (
+                lf.endswith(".so") or lf.endswith(".pyd") or lf.endswith(".dll")
+            ):
                 candidates.append(os.path.join(pkg_dir, fname))
 
     for path in candidates:
@@ -77,7 +81,9 @@ def _load_native():
 
     # Build a helpful error message containing diagnostics
     msg_lines = ["Could not find or import the compiled 'pyser' extension."]
-    msg_lines.append("Looked for module name 'pyser' and shared libraries in package directory.")
+    msg_lines.append(
+        "Looked for module name 'pyser' and shared libraries in package directory."
+    )
     msg_lines.append("Errors:")
     for what, err in errors:
         msg_lines.append(f" - {what}: {err}")
@@ -108,6 +114,7 @@ def _ensure_native():
 # serializer (see cpp/MARSHAL_PORT_PLAN.md). The sanitizer is opt-in and can
 # be enabled by setting the environment variable PYSER_SANITIZE_REDUCE=1.
 
+
 def _iter_functions(obj, seen=None):
     # Simple recursive walker that yields function objects nested in common
     # container types. Not exhaustive; used only by the sanitizer.
@@ -118,6 +125,7 @@ def _iter_functions(obj, seen=None):
         return
     seen.add(oid)
     import types
+
     if isinstance(obj, types.FunctionType):
         yield obj
         # inspect closure cells for nested functions
@@ -139,6 +147,7 @@ def _iter_functions(obj, seen=None):
             for f in _iter_functions(v, seen):
                 yield f
 
+
 @contextlib.contextmanager
 def _temp_clear_reduce(obj):
     enabled = os.environ.get("PYSER_SANITIZE_REDUCE") == "1"
@@ -147,6 +156,7 @@ def _temp_clear_reduce(obj):
         return
     backups = []
     import types
+
     for f in _iter_functions(obj):
         # Only clear user-defined function attributes if present
         for attr in ("__reduce__", "__reduce_ex__"):
@@ -171,6 +181,7 @@ def _temp_clear_reduce(obj):
 
 
 # Exposed API (thin wrappers)
+
 
 def serialize(obj: Any) -> bytes:
     """Serialize a Python object to bytes using the native pyser extension."""

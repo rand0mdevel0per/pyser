@@ -11,17 +11,22 @@ import shutil
 here = Path(__file__).resolve().parent
 package_dir = here / "pyserpy"
 
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=""):
         super().__init__(name, sources=[])
         self.sourcedir = os.fspath(Path(sourcedir).resolve())
+
 
 class CMakeBuild(build_ext):
     def run(self):
         try:
             subprocess.check_output(["cmake", "--version"])
         except Exception:
-            raise RuntimeError("CMake must be installed to build the following extensions: " + ", ".join(e.name for e in self.extensions))
+            raise RuntimeError(
+                "CMake must be installed to build the following extensions: "
+                + ", ".join(e.name for e in self.extensions)
+            )
         for ext in self.extensions:
             self.build_extension(ext)
 
@@ -37,14 +42,21 @@ class CMakeBuild(build_ext):
                 return str(cand2)
         if os.name == "nt":
             try:
-                out = subprocess.check_output(["where", "vcpkg"], stderr=subprocess.DEVNULL, shell=False, text=True)
+                out = subprocess.check_output(
+                    ["where", "vcpkg"],
+                    stderr=subprocess.DEVNULL,
+                    shell=False,
+                    text=True,
+                )
                 for line in out.splitlines():
                     p = Path(line.strip())
                     if p.exists():
                         cand = p.parent / "scripts" / "buildsystems" / "vcpkg.cmake"
                         if cand.exists():
                             return str(cand)
-                        cand2 = p.parent.parent / "scripts" / "buildsystems" / "vcpkg.cmake"
+                        cand2 = (
+                            p.parent.parent / "scripts" / "buildsystems" / "vcpkg.cmake"
+                        )
                         if cand2.exists():
                             return str(cand2)
             except Exception:
@@ -74,7 +86,9 @@ class CMakeBuild(build_ext):
             cmake_args.append(f"-DCMAKE_TOOLCHAIN_FILE={shlex.quote(vcpkg_toolchain)}")
             print(f"Using vcpkg toolchain: {vcpkg_toolchain}")
         else:
-            print("vcpkg toolchain not found; proceeding without it (ensure vcpkg libs are available on your system)")
+            print(
+                "vcpkg toolchain not found; proceeding without it (ensure vcpkg libs are available on your system)"
+            )
 
         build_temp = Path(self.build_temp)
         build_temp.mkdir(parents=True, exist_ok=True)
@@ -82,7 +96,9 @@ class CMakeBuild(build_ext):
         # Use explicit -S (source) and -B (build) to configure into the build
         # directory. This avoids relying on cwd behavior and is robust on
         # Windows PowerShell.
-        subprocess.check_call(["cmake", "-S", ext.sourcedir, "-B", str(build_temp)] + cmake_args)
+        subprocess.check_call(
+            ["cmake", "-S", ext.sourcedir, "-B", str(build_temp)] + cmake_args
+        )
 
         # Now build the configured tree explicitly (no cwd). This calls the
         # same underlying generator's build step and avoids double-path issues.
@@ -102,7 +118,9 @@ class CMakeBuild(build_ext):
                     found.append(p)
 
         if not found:
-            print("Warning: built library not found automatically; you may need to copy the produced shared library into the package directory manually.")
+            print(
+                "Warning: built library not found automatically; you may need to copy the produced shared library into the package directory manually."
+            )
         else:
             dest = Path(package_dir)
             dest.mkdir(parents=True, exist_ok=True)
