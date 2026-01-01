@@ -26,23 +26,39 @@ How it works (high level)
 
 Quick start
 -----------
-1) Build the C++ extension with CMake (see the `cpp` folder). Prefer using the `vcpkg` toolchain
-   to ensure consistent dependency versions on Windows. Example (from repository root):
+You can now install PySer directly using the setup.py script:
 
-```powershell
-# optional: set VCPKG_ROOT if vcpkg is not on PATH
-$env:VCPKG_ROOT = 'C:\path\to\vcpkg'
-cmake -S cpp -B build -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release
-cmake --build build --config Release
+```bash
+# Clone the repository
+git clone https://github.com/rand0mdevel0per/pyser.git
+cd pyser
+
+# Install the package directly
+./setup.py install
 ```
 
-After a successful build, copy the produced shared library (module named `pyser` or any file
-containing `pyser` in the name, e.g. `pysercp313-win_amd64.so` or `pyser.pyd`) and any required
-DLLs into the `pyserpy/` package directory before packaging the wheel.
+Alternatively, you can use the provided installation scripts:
 
-2) Install the Python package locally:
-
+**For Windows (PowerShell):**
 ```powershell
+# Download and run the PowerShell installation script
+curl -o install.ps1 https://raw.githubusercontent.com/rand0mdevel0per/pyser/main/install.ps1
+.\install.ps1
+```
+
+**For Linux/Mac (Bash):**
+```bash
+# Download and run the Bash installation script
+curl -o install.sh https://raw.githubusercontent.com/rand0mdevel0per/pyser/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+You can also install the package using pip after cloning:
+
+```bash
+git clone https://github.com/rand0mdevel0per/pyser.git
+cd pyser
 python -m pip install .
 ```
 
