@@ -1,4 +1,4 @@
-import sys, pathlib
+import sys
 sys.path.insert(0, r'E:\pyscr\pyser')
 from pyserpy import dumps, loads
 

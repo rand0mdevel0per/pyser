@@ -9,7 +9,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 # skip these tests (useful for CI when the extension hasn't been built).
 try:
     from pyserpy import serialize
-except Exception as exc:  # pragma: no cover - skip when extension not built
+except Exception:  # pragma: no cover - skip when extension not built
     pytest.skip(
         "pyserpy.serialize not available — build the extension first. "
         "Example PowerShell (single line): mkdir build; python -m pip install -e .",

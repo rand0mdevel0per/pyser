@@ -5,7 +5,7 @@ _repo_root = pathlib.Path(__file__).resolve().parent.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
 
-from pyserpy import dumps, loads, dump, load
+from pyserpy import dumps, loads
 
 
 def test_roundtrip():

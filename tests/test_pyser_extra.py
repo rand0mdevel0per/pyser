@@ -1,6 +1,7 @@
-import pytest
 import pathlib
 import sys
+import pytest
+
 _repo_root = pathlib.Path(__file__).resolve().parent.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
@@ -28,6 +29,7 @@ class Mixed:
 
 
 def test_closure_cell_contents_roundtrip():
+    """Test closures that capture free variables."""
     # Create closure and attach to object
     h = Holder()
     cl = make_closure(10)

@@ -1,4 +1,5 @@
-import importlib, traceback
+import importlib
+import traceback
 try:
     m = importlib.import_module('pyser')
     print('pyser module:', m, getattr(m, '__file__', None))

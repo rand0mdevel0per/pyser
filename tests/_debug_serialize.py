@@ -1,5 +1,6 @@
 import json
-import sys, pathlib
+import sys
+import pathlib
 
 import zstandard as zstd
 

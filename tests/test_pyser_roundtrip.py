@@ -1,5 +1,3 @@
-import os
-import tempfile
 import pytest
 import random
 import sys
@@ -71,7 +69,6 @@ def test_complex_class_with_closure_roundtrip():
     # If callable survived, verify behavior
     if hasattr(out, "func") and callable(out.func):
         assert out.func(3) == obj.func(3)
-
 
 def test_callable_inside_container_roundtrip_or_skip():
     # container with simple callable items

@@ -10,7 +10,7 @@ try:
     print('calling loads()')
     out = loads(data)
     print('returned', type(out), type(out.get('mv')))
-except Exception as e:
+except Exception:
     print('Exception from loads:')
     traceback.print_exc()
 

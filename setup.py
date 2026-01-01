@@ -120,9 +120,9 @@ if (here / "README.md").exists():
     long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name="pyserpy",
-    version="0.0.1",
-    description="Python wrapper for the high-performance C++ pyser serialization library",
+    name="rkyv",
+    version="1.0.1",
+    description="A high-performance C++ pyser serialization library with python wrapping",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=("tests",)),

@@ -1,4 +1,5 @@
-import importlib, sys
+import importlib
+import sys
 import pyserpy
 
 obj = {"hello": "world", "nums": [1,2,3]}
