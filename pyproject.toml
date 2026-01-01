@@ -53,3 +53,21 @@ environment = { OPENSSL_ROOT_DIR = "/opt/homebrew/opt/openssl@3", LDFLAGS = "-L/
 
 [tool.cibuildwheel.windows]
 before-build = "pip install cmake ninja"
+
+# Ruff configuration - ignore non-critical style issues
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+# Ignore non-critical errors:
+# E402 - module level import not at top of file (needed for sys.path manipulation)
+# E731 - do not assign a lambda expression (useful for testing)
+# E702 - multiple statements on one line (semicolon)
+# E722 - bare except (legacy code)
+# F401 - unused imports (can have false positives)
+ignore = ["E402", "E731", "E702", "E722", "F401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402", "E731"]
+"run_*.py" = ["E702"]
