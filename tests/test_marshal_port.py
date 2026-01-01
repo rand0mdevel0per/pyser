@@ -4,6 +4,7 @@ This test file verifies that the pyser library correctly serializes and
 deserializes Python functions using pure C++ JSON serialization instead
 of Python's marshal module.
 """
+
 import pytest
 import sys
 import pathlib
@@ -18,9 +19,10 @@ from pyserpy import dumps, loads
 
 def test_simple_function_roundtrip():
     """Test basic function serialization."""
+
     def add(a, b):
         return a + b
-    
+
     data = dumps(add)
     out = loads(data)
     assert callable(out)
@@ -29,9 +31,10 @@ def test_simple_function_roundtrip():
 
 def test_function_with_defaults():
     """Test function with default arguments."""
+
     def greet(name, greeting="Hello"):
         return f"{greeting}, {name}!"
-    
+
     data = dumps(greet)
     out = loads(data)
     # Default args should now be preserved
@@ -39,31 +42,34 @@ def test_function_with_defaults():
     assert out("World", "Hi") == "Hi, World!"
 
 
-
 def test_closure_with_freevars():
     """Test closures that capture free variables."""
+
     def make_adder(n):
         def adder(x):
             return x + n
+
         return adder
-    
+
     add5 = make_adder(5)
     data = dumps(add5)
     out = loads(data)
     assert callable(out)
     # Note: closure restoration may not work on all builds
     # If closure was restored, verify behavior
-    if hasattr(out, '__closure__') and out.__closure__:
+    if hasattr(out, "__closure__") and out.__closure__:
         assert out(10) == 15
 
 
 def test_function_with_nested_code():
     """Test function containing nested function definitions."""
+
     def outer():
         def inner():
             return 42
+
         return inner()
-    
+
     data = dumps(outer)
     out = loads(data)
     assert out() == 42
@@ -79,6 +85,7 @@ def test_lambda_roundtrip():
 
 def test_function_with_multiple_consts():
     """Test function with various constant types in co_consts."""
+
     def multi_const():
         a = 42
         b = 3.14
@@ -87,7 +94,7 @@ def test_function_with_multiple_consts():
         e = True
         f = (1, 2, 3)
         return a, b, c, d, e, f
-    
+
     data = dumps(multi_const)
     out = loads(data)
     result = out()
@@ -101,12 +108,13 @@ def test_function_with_multiple_consts():
 
 def test_function_with_many_locals():
     """Test function with many local variables."""
+
     def many_locals(a, b, c, d, e):
         x = a + b
         y = c + d
         z = e + x + y
         return z
-    
+
     data = dumps(many_locals)
     out = loads(data)
     assert out(1, 2, 3, 4, 5) == 15
@@ -114,16 +122,15 @@ def test_function_with_many_locals():
 
 def test_function_kwargs_only():
     """Test function with keyword-only arguments."""
+
     def kwonly(a, *, b, c=10):
         return a + b + c
-    
+
     data = dumps(kwonly)
     out = loads(data)
     # Keyword defaults should now be preserved
     assert out(1, b=2) == 13
     assert out(1, b=2, c=3) == 6
-
-
 
 
 if __name__ == "__main__":

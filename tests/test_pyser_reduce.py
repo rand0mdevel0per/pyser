@@ -1,5 +1,6 @@
 import pathlib
 import sys
+
 _repo_root = pathlib.Path(__file__).resolve().parent.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
@@ -17,9 +18,11 @@ def test_function_with_reduce_cleared_before_marshal():
     # serialize/deserialize works and function behavior is preserved.
     def f(x):
         return x + 1
+
     # Attach a dummy __reduce__ callable
     def fake_reduce():
         return (None, ())
+
     try:
         f.__reduce__ = fake_reduce
     except Exception:
@@ -35,7 +38,7 @@ def test_function_with_reduce_cleared_before_marshal():
 
     data = dumps(c)
     out = loads(data)
-    assert hasattr(out, 'fn')
+    assert hasattr(out, "fn")
     if callable(out.fn):
         assert out.fn(10) == 11
 
@@ -45,11 +48,11 @@ def test_noising_large_data_roundtrip():
     # increase coverage for chunking and pointers.
     b = bytes(range(256)) * 8
     obj = {
-        'bytes': b,
-        'nested': [list(range(50)), {'x': set(range(10))}],
-        'funcs': [lambda x: x * 2, lambda x: x + 3]
+        "bytes": b,
+        "nested": [list(range(50)), {"x": set(range(10))}],
+        "funcs": [lambda x: x * 2, lambda x: x + 3],
     }
     data = dumps(obj)
     out = loads(data)
-    assert bytes(out['bytes']) == b
-    assert tuple(out['nested'][0])[0] == 0
+    assert bytes(out["bytes"]) == b
+    assert tuple(out["nested"][0])[0] == 0

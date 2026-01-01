@@ -1,9 +1,8 @@
-import os
-import tempfile
 import pytest
 import random
 import sys
 import pathlib
+
 # Ensure repository root is on sys.path so local package `pyserpy` can be imported during tests
 _repo_root = pathlib.Path(__file__).resolve().parent.parent
 if str(_repo_root) not in sys.path:
@@ -21,12 +20,12 @@ def test_basic_types_roundtrip():
 
 
 def test_nested_containers():
-    obj = {"l": [1, [2, 3], {"x": [4,5]}], "t": (1,2,3), "s": {1,2,3}}
+    obj = {"l": [1, [2, 3], {"x": [4, 5]}], "t": (1, 2, 3), "s": {1, 2, 3}}
     data = dumps(obj)
     out = loads(data)
     # sets may not preserve order; compare as structures
     assert out["l"][0] == 1
-    assert tuple(out["t"]) == (1,2,3)
+    assert tuple(out["t"]) == (1, 2, 3)
 
 
 def test_bytes_and_large_data():
@@ -38,7 +37,7 @@ def test_bytes_and_large_data():
 
 
 def test_file_dump_load(tmp_path):
-    obj = {"x": [1,2,3]}
+    obj = {"x": [1, 2, 3]}
     f = tmp_path / "data.bin"
     dump(obj, str(f))
     out = load(str(f))
@@ -57,6 +56,7 @@ class ComplexData:
 def make_closure(a):
     def closure(b):
         return a + b
+
     return closure
 
 

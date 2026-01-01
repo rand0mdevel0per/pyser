@@ -1,7 +1,7 @@
-Serpy
+Rkyv
 ======
 
-Serpy is a thin Python wrapper around the high-performance C++ "pyser" serialization library.
+Rkyv is a thin Python wrapper around the high-performance C++ "pyser" serialization library.
 It exposes a compact Python API (dumps/loads/dump/load) and is intended to provide efficient
 binary serialization of Python objects with chunking and per-chunk SHA256 checksums.
 
