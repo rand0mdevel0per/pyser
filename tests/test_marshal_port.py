@@ -28,19 +28,16 @@ def test_simple_function_roundtrip():
 
 
 def test_function_with_defaults():
-    """Test function with default arguments.
-    
-    Note: Default arguments (__defaults__) are not currently serialized,
-    so we must explicitly pass all arguments.
-    """
+    """Test function with default arguments."""
     def greet(name, greeting="Hello"):
         return f"{greeting}, {name}!"
     
     data = dumps(greet)
     out = loads(data)
-    # Default args are not preserved, so we must pass both arguments
-    assert out("World", "Hello") == "Hello, World!"
+    # Default args should now be preserved
+    assert out("World") == "Hello, World!"
     assert out("World", "Hi") == "Hi, World!"
+
 
 
 def test_closure_with_freevars():
@@ -116,18 +113,16 @@ def test_function_with_many_locals():
 
 
 def test_function_kwargs_only():
-    """Test function with keyword-only arguments.
-    
-    Note: Default keyword arguments (__kwdefaults__) are not currently serialized.
-    """
-    def kwonly(a, *, b, c):  # Remove default for c
+    """Test function with keyword-only arguments."""
+    def kwonly(a, *, b, c=10):
         return a + b + c
     
     data = dumps(kwonly)
     out = loads(data)
-    # Must pass all keyword arguments explicitly since defaults not serialized
-    assert out(1, b=2, c=10) == 13
+    # Keyword defaults should now be preserved
+    assert out(1, b=2) == 13
     assert out(1, b=2, c=3) == 6
+
 
 
 
