@@ -135,7 +135,7 @@ if (here / "README.md").exists():
 
 setup(
     name="rkyv",
-    version="1.0.1",
+    version="1.0.3",
     description="A high-performance C++ pyser serialization library with python wrapping",
     long_description=long_description,
     long_description_content_type="text/markdown",
