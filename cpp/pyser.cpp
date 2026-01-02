@@ -66,10 +66,16 @@ namespace pyser {
         std::vector<uint32_t> digits;
         auto *long_obj = reinterpret_cast<PyLongObject *>(obj);
         std::vector<uint8_t> raw_data(n_bytes);
+        // Python 3.13+ added a 6th parameter (with_exception) to _PyLong_AsByteArray
+#if PY_VERSION_HEX >= 0x030D0000
         _PyLong_AsByteArray(long_obj, raw_data.data(), n_bytes, 1, 1, 1);
+#else
+        _PyLong_AsByteArray(long_obj, raw_data.data(), n_bytes, 1, 1);
+#endif
         node.meta.bigint_num_digits = n_bytes;
         node.chunks = create_chunks(raw_data);
         return node;
+
     }
 
     SerializedNode PyObjectSerializer::serialize_int(PyObject *obj) {
