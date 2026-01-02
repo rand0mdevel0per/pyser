@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rkyv"
-version = "1.0.1"
+version = "1.0.3"
 description = "A high-performance C++ serialization library with Python bindings"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 authors = [{ name = "rand0mdevel0per" }]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -44,7 +44,7 @@ build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
 skip = "*-musllinux_*"
 
 [tool.cibuildwheel.linux]
-before-all = "yum install -y openssl-devel zstd-devel || apt-get update && apt-get install -y libssl-dev libzstd-dev"
+before-all = "yum install -y openssl-devel libzstd-devel || apt-get update && apt-get install -y libssl-dev libzstd-dev"
 environment = { VCPKG_FORCE_SYSTEM_BINARIES = "1" }
 
 [tool.cibuildwheel.macos]
