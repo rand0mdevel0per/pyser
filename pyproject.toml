@@ -44,7 +44,7 @@ build = "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
 skip = "*-musllinux_*"
 
 [tool.cibuildwheel.linux]
-before-all = "yum install -y openssl-devel libzstd-devel || apt-get update && apt-get install -y libssl-dev libzstd-dev"
+before-all = "yum install -y openssl-devel libzstd-devel"
 environment = { VCPKG_FORCE_SYSTEM_BINARIES = "1" }
 
 [tool.cibuildwheel.macos]
