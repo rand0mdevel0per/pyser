@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rkyv"
 version = "1.0.4"
-description = "A high-performance C++ serialization library with Python bindings"
+description = "A high-performance C++ serialization library with python wrapping"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{ name = "rand0mdevel0per" }]
