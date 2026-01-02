@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rkyv"
-version = "1.0.3"
+version = "1.0.4"
 description = "A high-performance C++ serialization library with Python bindings"
 readme = "README.md"
 license = {text = "MIT"}
