@@ -62,7 +62,7 @@ jobs:
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BEFORE_ALL_LINUX: yum install -y openssl-devel libzstd-devel || apt-get update && apt-get install -y libssl-dev libzstd-dev
+          CIBW_BEFORE_ALL_LINUX: yum install -y openssl-devel libzstd-devel
           CIBW_BEFORE_ALL_MACOS: brew install openssl zstd nlohmann-json
           CIBW_ENVIRONMENT_MACOS: OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@3
           CIBW_TEST_REQUIRES: pytest
